@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Adaptive AI Technical Interview Coach</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#150f3a;--panel:#231a5c;--violet:#7c4dff;--mint:#2cf5c0;--coral:#ff5d8f;--sun:#ffd23f;--text:#f3f0ff}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Space Grotesk',system-ui,sans-serif;color:var(--text);min-height:100vh;
+background:radial-gradient(900px 500px at 10% -10%,#4b2cc9 0,transparent 60%),radial-gradient(700px 500px at 100% 10%,#0e7a78 0,transparent 55%),var(--ink)}
+.wrap{max-width:1100px;margin:auto;padding:20px;display:grid;gap:20px;grid-template-columns:320px 1fr}
+@media(max-width:800px){.wrap{grid-template-columns:1fr}}
+h1{margin:0 0 4px;font-size:clamp(28px,5vw,44px);letter-spacing:-1px}
+.sub{color:#b9afff;margin:0 0 6px}
+header{grid-column:1/-1}
+.card{background:rgba(35,26,92,.85);border:2px solid #3b2d8f;border-radius:22px;padding:20px;backdrop-filter:blur(6px)}
+.mascot{text-align:center;position:sticky;top:12px;align-self:start}
+.bubble{background:var(--sun);color:#2a1b00;border-radius:18px 18px 18px 4px;padding:12px 14px;font-weight:600;min-height:64px;margin-bottom:12px;text-align:left;line-height:1.35}
+#mouth{transform-origin:100px 128px;transition:transform .08s}
+.talk #mouth{animation:yap .22s infinite alternate}
+@keyframes yap{from{transform:scaleY(.3)}to{transform:scaleY(1.5)}}
+.talk #hog{animation:bob .5s infinite alternate}
+@keyframes bob{to{transform:translateY(-5px)}}
+.blink{animation:blink 4s infinite;transform-origin:center}
+@keyframes blink{0%,94%,100%{transform:scaleY(1)}97%{transform:scaleY(.1)}}
+.row{display:flex;gap:8px;align-items:center;justify-content:center;margin-top:10px;flex-wrap:wrap}
+button{font:inherit;font-weight:700;border:0;border-radius:14px;padding:11px 16px;cursor:pointer;color:var(--ink);background:var(--mint);transition:transform .1s}
+button:hover{transform:translateY(-2px)} button:focus-visible{outline:3px solid var(--sun)}
+button.alt{background:#3b2d8f;color:var(--text)}
+.tag{display:inline-block;background:var(--coral);color:#fff;border-radius:99px;padding:3px 12px;font-weight:700;font-size:13px}
+#q{font-size:clamp(20px,3vw,26px);font-weight:700;margin:12px 0}
+.opt{display:block;width:100%;text-align:left;margin:8px 0;background:#2f2378;color:var(--text);border:2px solid #4a3bb0}
+.opt.right{background:var(--mint);color:var(--ink);border-color:var(--mint)}
+.opt.wrong{background:var(--coral);color:#fff;border-color:var(--coral)}
+.bars{display:grid;gap:10px;margin-top:16px}
+.bar{display:grid;grid-template-columns:110px 1fr 44px;gap:10px;align-items:center;font-size:14px}
+.track{height:14px;background:#150f3a;border-radius:9px;overflow:hidden}
+.fill{height:100%;border-radius:9px;transition:width .6s,background .6s}
+.dots{display:flex;gap:5px;margin-top:14px}.dot{width:14px;height:14px;border-radius:50%}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style></head><body>
+<div class="wrap">
+<header><h1>Adaptive AI Technical Interview Coach</h1>
+<p class="sub">Your coach is Quill the hedgehog. Answers shape your next question, and weak topics come back until they stick.</p></header>
+
+<aside class="card mascot" id="mascot">
+ <div class="bubble" id="bubble">Hi! I'm Quill. Press Start and I'll ask you 5 machine learning interview questions.</div>
+ <svg id="hog" viewBox="0 0 200 190" width="220" aria-label="Quill the hedgehog">
+  <g fill="#5a3a22"><path d="M20 120 L8 95 L32 98 L22 70 L48 82 L46 52 L70 70 L78 40 L100 62 L122 40 L130 70 L154 52 L152 82 L178 70 L168 98 L192 95 L180 120 Z"/></g>
+  <ellipse cx="100" cy="125" rx="82" ry="52" fill="#7a4f2e"/>
+  <ellipse cx="100" cy="132" rx="52" ry="42" fill="#ffd9b0"/>
+  <ellipse cx="100" cy="112" rx="10" ry="8" fill="#2a1408"/>
+  <g class="blink"><circle cx="78" cy="98" r="9" fill="#fff"/><circle cx="122" cy="98" r="9" fill="#fff"/>
+  <circle cx="80" cy="99" r="5" fill="#150f3a"/><circle cx="120" cy="99" r="5" fill="#150f3a"/></g>
+  <ellipse cx="62" cy="118" rx="9" ry="6" fill="#ff8fb0" opacity=".8"/><ellipse cx="138" cy="118" rx="9" ry="6" fill="#ff8fb0" opacity=".8"/>
+  <ellipse id="mouth" cx="100" cy="130" rx="11" ry="7" fill="#8a1c3a"/>
+  <ellipse cx="58" cy="170" rx="16" ry="9" fill="#ffd9b0"/><ellipse cx="142" cy="170" rx="16" ry="9" fill="#ffd9b0"/>
+ </svg>
+ <div class="row">
+  <button class="alt" id="voice">Voice: on</button>
+  <button class="alt" id="replay">Replay</button>
+ </div>
+</aside>
+
+<main>
+ <section class="card" id="quiz">
+  <span class="tag" id="topic">Ready</span> <span class="sub" id="count"></span>
+  <div id="q">Press Start. Quill will ask you 5 machine learning interview questions, then review your answers.</div>
+  <div id="opts"></div>
+  <div class="row" style="justify-content:flex-start"><button id="next">Start interview</button></div>
+  <div class="dots" id="dots" aria-label="Results so far"></div>
+ </section>
+ <section class="card" id="review" style="display:none;margin-top:20px">
+  <div id="score" style="font-size:clamp(32px,6vw,54px);font-weight:700"></div>
+  <div id="items"></div>
+  <b>What to improve</b>
+  <div id="improve" style="margin:8px 0"></div>
+  <button id="again">Practise again</button>
+ </section>
+</main></div>
+<script>
+const sid=localStorage.sid||(localStorage.sid=Math.random().toString(36).slice(2));
+const H={'Content-Type':'application/json','X-Session':sid};
+let cur=null,voiceOn=true,last='',finished=false;
+const $=i=>document.getElementById(i);
+function speak(t){last=t;$('bubble').textContent=t;speechSynthesis.cancel();
+ if(!voiceOn||!window.speechSynthesis)return;
+ const u=new SpeechSynthesisUtterance(t);u.pitch=1.9;u.rate=1.08;
+ u.onstart=()=>$('mascot').classList.add('talk');
+ u.onend=u.onerror=()=>$('mascot').classList.remove('talk');
+ speechSynthesis.speak(u);}
+$('voice').onclick=()=>{voiceOn=!voiceOn;$('voice').textContent='Voice: '+(voiceOn?'on':'off');if(!voiceOn)speechSynthesis.cancel()};
+$('replay').onclick=()=>speak(last);
+const dots=a=>$('dots').innerHTML=a.map(ok=>`<span class="dot" style="background:${ok?'var(--mint)':'var(--coral)'}"></span>`).join('');
+async function begin(){
+ await fetch('/api/start',{method:'POST',headers:H});
+ $('review').style.display='none';$('quiz').style.display='block';finished=false;dots([]);nextQ();}
+async function nextQ(){
+ const r=await (await fetch('/api/next',{headers:H})).json();
+ if(r.done)return showReview();
+ cur=r;$('topic').textContent=r.topic;$('count').textContent=`Question ${r.number} of ${r.total}`;
+ $('q').textContent=r.q;$('next').style.display='none';$('opts').innerHTML='';
+ r.o.forEach((t,i)=>{const b=document.createElement('button');b.className='opt';b.textContent=t;b.onclick=()=>ans(i);$('opts').append(b)});
+ speak(r.q);}
+async function ans(i){
+ const bs=[...document.querySelectorAll('.opt')];bs.forEach(b=>b.disabled=true);
+ const r=await (await fetch('/api/answer',{method:'POST',headers:H,body:JSON.stringify({id:cur.id,choice:i})})).json();
+ bs[r.answer].classList.add('right');if(!r.correct)bs[i].classList.add('wrong');
+ dots(r.results);finished=r.done;
+ $('next').textContent=r.done?'See my review':'Next question';$('next').style.display='';
+ speak(r.feedback);}
+async function showReview(){
+ const r=await (await fetch('/api/summary',{headers:H})).json();
+ $('quiz').style.display='none';$('review').style.display='block';
+ $('score').textContent=`${r.score} / ${r.total} correct`;
+ $('items').innerHTML=r.questions.map(q=>`<p style="margin:10px 0"><span class="tag" style="background:${q.ok?'var(--mint);color:#150f3a':'var(--coral)'}">${q.ok?'Correct':'Missed'}</span> <b>${q.topic}</b><br>${q.q}<br>${q.ok?'':`<small>You said: ${q.yours}. Right answer: ${q.right}. ${q.why}</small>`}</p>`).join('');
+ $('improve').innerHTML=r.improve.length?r.improve.map(i=>`<p style="margin:6px 0"><b>${i.topic}:</b> ${i.tip}</p>`).join(''):'<p>Nothing to fix this round. Great job!</p>';
+ speak(r.speech);}
+$('next').onclick=()=>{if($('next').textContent.startsWith('Start'))begin();else if(finished)showReview();else nextQ();};
+$('again').onclick=begin;
+</script></body></html>
